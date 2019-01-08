@@ -1,4 +1,4 @@
-# React Virgin Store 🐛 — context-based store for React
+# React Virgin Store 🐛 — context-based store for React, TypeScript-friendly
 
 React Virgin Store (RVS) is comfortable solution for separation store-related logic from react components. Unlike Redux **main goal for RVS is being home for compact local stores of smart components**.
 
@@ -113,17 +113,20 @@ export class ItemScreen extends React.Component {
 }
 ```
 
+## Comparing with similar solutions
+[react-waterfall](https://github.com/didierfranc/react-waterfall):
+* No TypeScript support and due to API design decision for actions it is not possible to make types
+* No async actions support
+* Not very performant code on store creation
+
+[Alveron](https://github.com/rofrischmann/alveron):
+* No TypeScript support
+
+That's why this library has been born. 👭
+
+## Credits
+Also thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
 
 ## TODO
 * Add middleware support and support Redux Dev Tools
 * Add tests
-
-## Credits
-Many thanks to [@didierfranc](https://github.com/didierfranc) for **[react-waterfall](https://github.com/didierfranc/react-waterfall)** as inspiration for this library. We have been using it for a while in our project, but met some problems:
-* No TypeScript support
-* No thunk-like actions support
-* Not very performant code on store creation
-
-That's why this library has been born. 👭
-
-Also thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
