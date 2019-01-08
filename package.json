@@ -1,6 +1,6 @@
 {
   "name": "react-virgin-store",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React Context API based store",
   "files": [
     "index.ts",
