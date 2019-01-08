@@ -25,10 +25,10 @@ export type RVActions<S> = {
 
 type RVWrappedAction<S extends {}, F extends Function> =
     F extends (...args: infer Args) => (getState: RVGetState<S>, setState: RVSetState<S>) => infer R
-    ? (...args: Args) => R
-    : F extends (...args: infer Args) => $PartialMap<S>
-    ? (...args: Args) => $PartialMap<S>
-    : never;
+        ? (...args: Args) => R
+        : F extends (...args: infer Args) => $PartialMap<S>
+            ? (...args: Args) => $PartialMap<S>
+            : never;
 
 export function createStore<
     S extends object,
