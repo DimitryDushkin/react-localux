@@ -9,22 +9,24 @@ For example, you might have screen-like component of some item with vast logic r
 // item-store.ts
 import { RVSThunk, createStore } from '../index';
 
-type $PartialMap <T extends object> = {
-    [P in keyof T] ?: T[P];
-};
-const pause = async (timeout: number): Promise<any> =>
-    new Promise(resolve => setTimeout(resolve, timeout));
+// Utils
+type $PartialMap <T extends object> = {[P in keyof T] ?: T[P]};
+const pause = async (timeout: number): Promise<any> => new Promise(resolve => setTimeout(resolve, timeout));
 
 type State = {
     loading: boolean,
     data?: string,
     error?: boolean,
 };
+
 const initialState: State = {
     loading: false,
 };
 const actions = {
-    loadItem: (): RVSThunk<State, Promise<void>> => async (_, setState) => {
+    loadItem: (): RVSThunk<State, Promise<void>> => async (getState, setState) => {
+        // You might need state in action
+        const state = getState();
+
         setState(actions.loading());
         // Pretend making API call which can fail
         await pause(1000);
@@ -47,6 +49,7 @@ const actions = {
         error: true,
     })
 };
+
 const createItemStore = () => {
     return createStore(
         initialState,
@@ -101,14 +104,13 @@ export class ItemScreen extends React.Component {
         return (
             <Provider>
                 <Consumer>{
-                    store => (...)
+                    store => ("...")
                 }
                 </Consumer>
             </Provider>
         );
     }
 }
-
 ```
 
 
