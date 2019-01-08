@@ -122,7 +122,7 @@ export class ItemScreen extends React.Component {
 [Alveron](https://github.com/rofrischmann/alveron):
 * No TypeScript support
 
-Actually I didn't find any similar library with TypeScript support 🤷‍♂.
+Actually I didn't find any similar library with TypeScript support 😕.
 
 That's why this library has been born. 👭
 
