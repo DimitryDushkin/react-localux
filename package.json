@@ -5,7 +5,7 @@
   "files": [
     "index.ts",
     "index.js",
-    "create-provider.ts",
+    "create-provider.tsx",
     "create-provider.js"
   ],
   "main": "index.js",
