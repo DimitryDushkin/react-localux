@@ -1,13 +1,13 @@
-# React Virgin Store 🐛 — context-based store for React, TypeScript-friendly
+# React Localux 🐛 — context-based store for React, TypeScript-friendly
 
-React Virgin Store (RVS) is comfortable solution for separation store-related logic from react components. Unlike Redux **main goal for RVS is being home for compact local stores of smart components**.
+React Localux (RL) is comfortable solution for separation store-related logic from react components. Unlike Redux **main goal for RL is being home for compact local stores of smart components**.
 
 For example, you might have screen-like component of some item with vast logic related to this screen and it is required to support several different stacked screens of such items. Implementing such feature with _global Redux store result complicated code_, but it turns out that using _single local store for each screen produces quite straightforward solution_.
 
 ## Example code (from [example.tsx](example/example.tsx))
 ```tsx
 // item-store.ts
-import { RVSThunk, createStore } from '../index';
+import { RLThunk, createStore } from 'react-localux';
 
 // Utils
 type $PartialMap <T extends object> = {[P in keyof T] ?: T[P]};
@@ -23,7 +23,7 @@ const initialState: State = {
     loading: false,
 };
 const actions = {
-    loadItem: (): RVSThunk<State, Promise<void>> => async (getState, setState) => {
+    loadItem: (): RLThunk<State, Promise<void>> => async (getState, setState) => {
         // You might need state in action
         const state = getState();
 

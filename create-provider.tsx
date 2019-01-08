@@ -1,7 +1,7 @@
 import React from 'react';
-import {RVSetState} from './index';
+import {RLSetState} from './index';
 
-export type RVSProviderProps<S> = {
+export type RLProviderProps<S> = {
     children:
         React.ReactElement<any>
         | ((state: S) => React.ReactElement<any>)
@@ -9,17 +9,17 @@ export type RVSProviderProps<S> = {
 };
 
 export function createProvider<S extends {}>(
-    init: (getState: () => S, setState: RVSetState<S>) => void,
+    init: (getState: () => S, setState: RLSetState<S>) => void,
     Provider: React.Provider<S>,
     initialState: S,
-): React.ComponentClass<RVSProviderProps<S>, S> {
-    return class RVSProvider extends React.Component<RVSProviderProps<S>, S> {
-        constructor(props: RVSProviderProps<S>) {
+): React.ComponentClass<RLProviderProps<S>, S> {
+    return class RLProvider extends React.Component<RLProviderProps<S>, S> {
+        constructor(props: RLProviderProps<S>) {
             super(props);
 
             this.state = initialState;
 
-            const setState = this.setState.bind(this) as RVSetState<S>;
+            const setState = this.setState.bind(this) as RLSetState<S>;
 
             init(
                 () => this.state,

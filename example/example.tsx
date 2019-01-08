@@ -1,5 +1,5 @@
 // item-store.ts
-import { RVSThunk, createStore } from '../index';
+import { RLThunk, createStore } from '../index';
 
 // Utils
 type $PartialMap <T extends object> = {[P in keyof T] ?: T[P]};
@@ -15,7 +15,7 @@ const initialState: State = {
     loading: false,
 };
 const actions = {
-    loadItem: (): RVSThunk<State, Promise<void>> => async (getState, setState) => {
+    loadItem: (): RLThunk<State, Promise<void>> => async (getState, setState) => {
         // You might need state in action
         const state = getState();
 

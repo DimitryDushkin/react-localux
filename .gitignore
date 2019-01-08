@@ -2,3 +2,4 @@ node_modules
 dist
 index.js
 create-provider.js
+example/example.js

@@ -1,5 +1,5 @@
 {
-  "name": "react-virgin-store",
+  "name": "react-localux",
   "version": "0.2.0",
   "description": "React Context API based store",
   "files": [
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DimitryDushkin/react-virgin-store.git"
+    "url": "git+https://github.com/DimitryDushkin/react-localux.git"
   },
   "keywords": [
     "react",
@@ -25,9 +25,9 @@
   "author": "Dimitry Dushkin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DimitryDushkin/react-virgin-store/issues"
+    "url": "https://github.com/DimitryDushkin/react-localux/issues"
   },
-  "homepage": "https://github.com/DimitryDushkin/react-virgin-store#readme",
+  "homepage": "https://github.com/DimitryDushkin/react-localux#readme",
   "devDependencies": {
     "@types/react": "^16.7.18",
     "husky": "^1.3.1",
