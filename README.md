@@ -122,10 +122,12 @@ export class ItemScreen extends React.Component {
 [Alveron](https://github.com/rofrischmann/alveron):
 * No TypeScript support
 
+Actually I didn't find any similar library with TypeScript support 🤷‍♂.
+
 That's why this library has been born. 👭
 
 ## Credits
-Also thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
+Thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
 
 ## TODO
 * Add middleware support and support Redux Dev Tools
