@@ -1,0 +1,37 @@
+{
+  "name": "react-virgin-store",
+  "version": "1.0.0",
+  "description": "React Context API based store",
+  "files": [
+    "index.ts",
+    "index.js",
+    "create-provider.ts",
+    "create-provider.js"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DimitryDushkin/react-virgin-store.git"
+  },
+  "keywords": [
+    "react",
+    "store"
+  ],
+  "author": "Dimitry Dushkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DimitryDushkin/react-virgin-store/issues"
+  },
+  "homepage": "https://github.com/DimitryDushkin/react-virgin-store#readme",
+  "devDependencies": {
+    "@types/react": "^16.7.18",
+    "react": "^16.7.0",
+    "typescript": "^3.2.2"
+  },
+  "peerDependencies": {
+    "react": "^16.6.0"
+  }
+}
