@@ -130,7 +130,3 @@ That's why this library has been born. 👭
 
 ## Credits
 Thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
-
-## TODO
-* Add middleware support and support Redux Dev Tools
-* Add tests
