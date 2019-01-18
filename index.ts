@@ -89,6 +89,6 @@ export function createStore<
         Provider,
         Consumer: Context.Consumer,
         actions: wrappedActions,
-        getState,
+        getState: () => getState ? getState() : initialState,
     };
 }
