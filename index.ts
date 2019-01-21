@@ -18,6 +18,7 @@ export type RLActions<S> = {
 type RLStore<S, Actions> = {
     Provider: React.ComponentClass<RLProviderProps<S>, S>,
     Consumer: React.Consumer<S>,
+    getState?: RLGetState<S>,
     actions: Actions,
 };
 
@@ -88,5 +89,6 @@ export function createStore<
         Provider,
         Consumer: Context.Consumer,
         actions: wrappedActions,
+        getState: () => getState ? getState() : initialState,
     };
 }
