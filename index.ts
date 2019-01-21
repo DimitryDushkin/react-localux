@@ -18,7 +18,7 @@ export type RLActions<S> = {
 type RLStore<S, Actions> = {
     Provider: React.ComponentClass<RLProviderProps<S>, S>,
     Consumer: React.Consumer<S>,
-    getState?: RLGetState<S>,
+    getState: RLGetState<S>,
     actions: Actions,
 };
 
