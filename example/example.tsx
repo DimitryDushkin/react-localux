@@ -46,6 +46,7 @@ const createItemStore = () => {
     return createStore(
         initialState,
         actions,
+        undefined
     );
 }
 type ItemStore = ReturnType<typeof createItemStore>;

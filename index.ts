@@ -6,12 +6,12 @@ type $PartialMap<S extends {}> = {
 };
 type $ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
 
-export type RLSetState<S extends {}> = (state: $PartialMap<S> | RLThunk<S>) => void;
+export type RLSetState<S extends {}, R = any, E = undefined> = (state: $PartialMap<S> | RLThunk<S, R, E>) => void;
 export type RLGetState<S extends {}> = () => S;
-export type RLThunk<S extends {}, R = any> = (getState: RLGetState<S>, setState: RLSetState<S>) => R;
-export type RLActions<S> = {
+export type RLThunk<S extends {}, R = any, E = undefined> = (getState: RLGetState<S>, setState: RLSetState<S, R, E>, extraArgument: E) => R;
+export type RLActions<S, E> = {
     [actionName: string]: (...args: any[]) =>
-        ((getState: RLGetState<S>, setState: RLSetState<S>) => any)
+        ((getState: RLGetState<S>, setState: RLSetState<S, any, E>, extraArgument: E) => any)
         | $PartialMap<S>,
 };
 
@@ -22,8 +22,8 @@ type RLStore<S, Actions> = {
     actions: Actions,
 };
 
-type WrappedAction<S extends {}, F extends Function> =
-    F extends (...args: infer Args) => (getState: RLGetState<S>, setState: RLSetState<S>) => infer R
+type WrappedAction<S extends {}, F extends Function, E> =
+    F extends (...args: infer Args) => (getState: RLGetState<S>, setState: RLSetState<S, any, E>, extraArgument: E) => infer R
         ? (...args: Args) => R
         : F extends (...args: infer Args) => $PartialMap<S>
             ? (...args: Args) => $PartialMap<S>
@@ -31,24 +31,26 @@ type WrappedAction<S extends {}, F extends Function> =
 
 export function createStore<
     S extends object,
-    A extends RLActions<S>,
+    A extends RLActions<S, E>,
     WrappedActions extends {
-        [K in keyof A]: WrappedAction<S, A[K]>
-    }
+        [K in keyof A]: WrappedAction<S, A[K], E>
+    },
+    E = undefined,
 >(
-    initialState: S,
-    actions: A,
+        initialState: S,
+        actions: A,
+        extraArgument: E,
 ): RLStore<S, WrappedActions> {
     let getState: RLGetState<S> | undefined;
-    let setState: RLSetState<S> | undefined;
+    let setState: RLSetState<S, any, E> | undefined;
 
     const Context = React.createContext(initialState);
-    const Provider = createProvider(
+    const Provider = createProvider<S, E>(
         (providerGetState, providerSetState) => {
             getState = providerGetState;
-            setState = (state: $PartialMap<S> | RLThunk<S>) => {
+            setState = (state: $PartialMap<S> | RLThunk<S, any, E>) => {
                 if (typeof state === 'function') {
-                    return state(providerGetState, providerSetState);
+                    return state(providerGetState, providerSetState, extraArgument);
                 } else {
                     providerSetState(state);
                 }
@@ -74,7 +76,7 @@ export function createStore<
                 }
 
                 if (typeof result === 'function') {
-                    return result(getState, setState);
+                    return result(getState, setState, extraArgument);
                 } else {
                     setState(result);
 
