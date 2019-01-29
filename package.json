@@ -12,7 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "pre-commit": "npm run build"
+    "prepublish": "echo \"BUILD\"; npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
   "homepage": "https://github.com/DimitryDushkin/react-localux#readme",
   "devDependencies": {
     "@types/react": "^16.7.18",
-    "husky": "^1.3.1",
     "react": "^16.7.0",
     "typescript": "^3.2.2"
   },
