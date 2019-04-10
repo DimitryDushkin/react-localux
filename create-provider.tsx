@@ -2,10 +2,9 @@ import React from 'react';
 import { RLSetState } from './index';
 
 export type RLProviderProps<S> = {
-    children:
-    React.ReactElement<any>
-    | ((state: S) => React.ReactElement<any>)
-    | null,
+    children: React.ReactElement<any>
+        | ((state: S) => React.ReactElement<any>)
+        | null,
 };
 
 export function createProvider<S extends {}, E>(
@@ -14,17 +13,29 @@ export function createProvider<S extends {}, E>(
     initialState: S,
 ): React.ComponentClass<RLProviderProps<S>, S> {
     return class RLProvider extends React.Component<RLProviderProps<S>, S> {
+        private isMounted = true;
+
         constructor(props: RLProviderProps<S>) {
             super(props);
 
             this.state = initialState;
 
-            const setState = this.setState.bind(this) as RLSetState<S, any, E>;
+            const setState = (state: any, callback?: () => void) => {
+                if (!this.isMounted) {
+                    return;
+                }
+
+                this.setState(state, callback);
+            };
 
             init(
                 () => this.state,
                 setState,
             );
+        }
+
+        public componentWillUnmount() {
+            this.isMounted = false;
         }
 
         public render() {
