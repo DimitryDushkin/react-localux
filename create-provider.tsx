@@ -13,7 +13,7 @@ export function createProvider<S extends {}, E>(
     initialState: S,
 ): React.ComponentClass<RLProviderProps<S>, S> {
     return class RLProvider extends React.Component<RLProviderProps<S>, S> {
-        private isMounted = true;
+        private mounted = true;
 
         constructor(props: RLProviderProps<S>) {
             super(props);
@@ -21,7 +21,7 @@ export function createProvider<S extends {}, E>(
             this.state = initialState;
 
             const setState = (state: any, callback?: () => void) => {
-                if (!this.isMounted) {
+                if (!this.mounted) {
                     return;
                 }
 
@@ -35,7 +35,7 @@ export function createProvider<S extends {}, E>(
         }
 
         public componentWillUnmount() {
-            this.isMounted = false;
+            this.mounted = false;
         }
 
         public render() {
