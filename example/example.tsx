@@ -52,7 +52,7 @@ const createItemStore = () => {
 type ItemStore = ReturnType<typeof createItemStore>;
 
 // item-screen.tsx
-import React from 'react';
+import React, { useMemo, useContext } from 'react';
 
 export class ItemScreen extends React.Component {
     store: ItemStore;
@@ -103,4 +103,25 @@ export class ItemScreen extends React.Component {
             </Provider>
         );
     }
+}
+
+// item-screen-hooks.tsx
+
+function useItemStore() {
+    return useMemo(() => createItemStore(), []);
+}
+
+function ItemWithHooks() {
+    const {Context, actions} = useItemStore();
+    const item = useContext(Context);
+
+    return (
+        <div>
+            <h1>Item Screen</h1>
+            {item.loading && <p>Loading...</p>}
+            {item.error && <p>Error loading 😕</p>}
+            {item.data && <p>Data loaded 🎆: {item.data}</p>}
+            <button onClick={() => actions.loadItem()}>Load item</button>
+        </div>
+    )
 }

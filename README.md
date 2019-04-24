@@ -33,7 +33,7 @@ const actions = {
         // Pretend making API call which can fail
         await pause(1000);
         if (Math.random() > 0.5) {
-            setState(actions.loadSucess('Hooray!😁'));
+            setState(actions.loadSuccess('Hooray!😁'));
         } else {
             setState(actions.loadFailed());
         }
@@ -42,7 +42,7 @@ const actions = {
         loading: true,
         error: false,
     }),
-    loadSucess: (data: string): $PartialMap<State> => ({
+    loadSuccess: (data: string): $PartialMap<State> => ({
         loading: false,
         data,
     }),
@@ -112,6 +112,28 @@ export class ItemScreen extends React.Component {
             </Provider>
         );
     }
+}
+```
+
+Or it even shorter when using hooks:
+```tsx
+function useItemStore() {
+    return useMemo(() => createItemStore(), []);
+}
+
+function ItemWithHooks() {
+    const {Context, actions} = useItemStore();
+    const item = useContext(Context);
+
+    return (
+        <div>
+            <h1>Item Screen</h1>
+            {item.loading && <p>Loading...</p>}
+            {item.error && <p>Error loading 😕</p>}
+            {item.data && <p>Data loaded 🎆: {item.data}</p>}
+            <button onClick={() => actions.loadItem()}>Load item</button>
+        </div>
+    )
 }
 ```
 
