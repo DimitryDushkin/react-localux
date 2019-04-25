@@ -8,7 +8,9 @@
     "src/create-store.js",
     "src/create-store.ts",
     "src/devtools.js",
-    "src/devtools.ts"
+    "src/devtools.ts",
+    "index.js",
+    "index.ts"
   ],
   "main": "index.js",
   "scripts": {

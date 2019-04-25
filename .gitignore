@@ -1,6 +1,4 @@
 node_modules
 dist
-src/create-store.js
-src/devtools.js
-src/create-provider.js
+*.js
 example/example.js
