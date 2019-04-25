@@ -1,5 +1,5 @@
 import React from 'react';
-import { RLSetState } from './index';
+import { RLSetState } from './create-store';
 
 export type RLProviderProps<S> = {
     children: React.ReactElement<any>

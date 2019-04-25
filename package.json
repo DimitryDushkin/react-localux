@@ -3,10 +3,12 @@
   "version": "0.8.0",
   "description": "React Context API based store",
   "files": [
-    "index.ts",
-    "index.js",
-    "create-provider.tsx",
-    "create-provider.js"
+    "src/create-provider.js",
+    "src/create-provider.tsx",
+    "src/create-store.js",
+    "src/create-store.ts",
+    "src/devtools.js",
+    "src/devtools.ts"
   ],
   "main": "index.js",
   "scripts": {

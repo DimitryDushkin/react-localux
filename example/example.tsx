@@ -1,5 +1,5 @@
 // item-store.ts
-import { RLThunk, createStore } from '../index';
+import { RLThunk, createStore } from '../src/create-store';
 
 // Utils
 type $PartialMap <T extends object> = {[P in keyof T] ?: T[P]};
