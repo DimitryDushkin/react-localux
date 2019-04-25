@@ -1,6 +1,6 @@
 import React from 'react';
 import { createProvider, RLProviderProps } from './create-provider';
-import { createDevToolsLogger } from './devtools';
+import { tryCreateDevToolsLogger } from './devtools';
 
 type $PartialMap<S extends {}> = {
     [P in keyof S]?: S[P];
@@ -62,10 +62,7 @@ export function createStore<
         Context.Provider,
         initialState,
     );
-    const devToolsLogger = typeof window !== 'undefined' &&
-        window.__REDUX_DEVTOOLS_EXTENSION__
-            ? createDevToolsLogger()
-            : undefined;
+    const devToolsLogger = tryCreateDevToolsLogger();
 
     const wrappedActions: WrappedActions = {} as WrappedActions;
 

@@ -1,6 +1,14 @@
 let id = 0
 
-export function createDevToolsLogger<S>() {
+declare global {
+    interface Window { __REDUX_DEVTOOLS_EXTENSION__: any; }
+}
+
+export function tryCreateDevToolsLogger<S>() {
+    if (!('__REDUX_DEVTOOLS_EXTENSION__' in window)) {
+        return;
+    }
+
     const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__;
     const instanceID = id;
 
