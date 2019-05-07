@@ -1,104 +1,71 @@
-import React from 'react';
-import { createProvider, RLProviderProps } from './create-provider';
-import { tryCreateDevToolsLogger } from './devtools';
+import { useReducer, useMemo } from "react";
+import createUseContext from "constate";
+import { tryCreateDevToolsLogger } from "./devtools";
 
-type $PartialMap<S extends {}> = {
-    [P in keyof S]?: S[P];
+type MethodArgs<S, F extends MethodIn<S>> = F extends (
+  state: S
+) => (...args: infer Args) => any
+  ? Args
+  : never;
+
+type MethodIn<S> = (state: S) => (...args: any[]) => S;
+type MethodsIn<S> = Record<string, MethodIn<S>>;
+type MethodOut<S, F> = F extends (state: S) => (...args: infer Args) => S
+  ? (...args: Args) => void
+  : never;
+type MethodsOut<S, M extends MethodsIn<S>> = {
+  [K in keyof M]: MethodOut<S, M[K]>
 };
-type $ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
+export type Thunk<M extends MethodsIn<any>> = (
+  methods: MethodsOut<any, M>
+) => (...args: any[]) => any;
 
-export type RLSetState<S extends {}, R = any, E = undefined> = (state: $PartialMap<S> | RLThunk<S, R, E>) => void;
-export type RLGetState<S extends {}> = () => S;
-export type RLThunk<S extends {}, R = any, E = undefined> = (getState: RLGetState<S>, setState: RLSetState<S, R, E>, extraArgument: E) => R;
-export type RLActions<S, E> = {
-    [actionName: string]: (...args: any[]) =>
-        ((getState: RLGetState<S>, setState: RLSetState<S, any, E>, extraArgument: E) => any)
-        | $PartialMap<S>,
+type Action<P> = {
+  type: string;
+  payload: P;
 };
 
-type RLStore<S, Actions> = {
-    Context: React.Context<S>,
-    Provider: React.ComponentClass<RLProviderProps<S>, S>,
-    Consumer: React.Consumer<S>,
-    getState: RLGetState<S>,
-    actions: Actions,
-};
+export function useMethods<S extends any, M extends MethodsIn<S>>(
+  initialState: S,
+  methods: M
+) {
+  // 1. Create actions and action creators from map of actions
+  const reducer = useMemo(() => {
+    const logger = tryCreateDevToolsLogger();
 
-type WrappedAction<S extends {}, F extends Function, E> =
-    F extends (...args: infer Args) => (getState: RLGetState<S>, setState: RLSetState<S, any, E>, extraArgument: E) => infer R
-        ? (...args: Args) => R
-        : F extends (...args: infer Args) => $PartialMap<S>
-            ? (...args: Args) => $PartialMap<S>
-            : never;
+    return (state: S, action: Action<any>) => {
+      if (logger) {
+        logger(action, state);
+      }
 
-export function createStore<
-    S extends object,
-    A extends RLActions<S, E>,
-    WrappedActions extends {
-        [K in keyof A]: WrappedAction<S, A[K], E>
-    },
-    E = undefined,
->(
-        initialState: S,
-        actions: A,
-        extraArgument: E,
-): RLStore<S, WrappedActions> {
-    let getState: RLGetState<S> | undefined;
-    let setState: RLSetState<S, any, E> | undefined;
-
-    const Context = React.createContext(initialState);
-    const Provider = createProvider<S, E>(
-        (providerGetState, providerSetState) => {
-            getState = providerGetState;
-            setState = (state: $PartialMap<S> | RLThunk<S, any, E>) => {
-                if (typeof state === 'function') {
-                    return state(providerGetState, providerSetState, extraArgument);
-                } else {
-                    devToolsLogger && devToolsLogger('state update', state);
-                    providerSetState(state);
-                }
-            };
-        },
-        Context.Provider,
-        initialState,
-    );
-    const devToolsLogger = tryCreateDevToolsLogger();
-
-    const wrappedActions: WrappedActions = {} as WrappedActions;
-
-    Object.keys(actions)
-        .forEach(key => {
-            const originalFn = actions[key];
-            const wrappedFn: any = (...args: $ArgumentTypes<typeof originalFn>) => {
-                const result = originalFn(...args);
-
-                if (!getState || !setState) {
-                    // tslint:disable-next-line:no-console
-                    console.error('<Provider /> is not initialized');
-
-                    return;
-                }
-
-                if (typeof result === 'function') {
-                    devToolsLogger && devToolsLogger(`thunk — ${key}`, getState());
-                    return result(getState, setState, extraArgument);
-                } else {
-                    // Never-ever goes here
-                    devToolsLogger && devToolsLogger(key, result);
-                    setState(result);
-
-                    return;
-                }
-            };
-
-            wrappedActions[key] = wrappedFn;
-        });
-
-    return {
-        Context,
-        Provider,
-        Consumer: Context.Consumer,
-        actions: wrappedActions,
-        getState: () => getState ? getState() : initialState,
+      return methods[action.type](state)(...action.payload);
     };
+  }, []);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const methodsOut = {} as MethodsOut<S, M>;
+
+  Object.keys(methods).forEach(type => {
+    const originalMethodIn = methods[type];
+    const methodOut: MethodOut<S, typeof originalMethodIn> = (
+      ...payload: MethodArgs<S, typeof originalMethodIn>
+    ) => {
+      dispatch({
+        type: type,
+        payload
+      });
+    };
+
+    // @ts-ignore check it later
+    methodsOut[type] = methodOut;
+  });
+
+  return { state, methods: methodsOut };
 }
+
+export const createUseStore = <S extends any, M extends MethodsIn<S>>(
+  defaultState: S,
+  methodsIn: M
+) =>
+  createUseContext((initialState: S | undefined) =>
+    useMethods(initialState || defaultState, methodsIn)
+  );
