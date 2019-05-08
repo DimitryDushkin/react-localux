@@ -1,21 +1,21 @@
-// item-screen.tsx
-import React, { useCallback } from "react";
+import React, { useMemo, memo } from "react";
 import ReactDOM from "react-dom";
 import { useItemsStore, defaultState, loadItem } from "./store";
 
 function ItemScreen() {
   const { Provider } = useItemsStore;
   return (
-    <Provider {...defaultState}>
+    <Provider initialState={defaultState}>
       <Item />
+      <hr />
+      <ItemTestMemo />
     </Provider>
   );
 }
 
-// item.tsx
 function Item() {
   const { state, methods } = useItemsStore();
-  const handleLoadClick = useCallback(() => loadItem(methods), []);
+  const handleLoadClick = useMemo(() => loadItem(methods), []);
 
   return (
     <div>
@@ -24,6 +24,23 @@ function Item() {
       {state.error && <p>Error loading 😕</p>}
       {state.data && <p>Data loaded 🎆: {state.data}</p>}
       <button onClick={handleLoadClick}>Load item</button>
+    </div>
+  );
+}
+
+let itemTestRerenderCounter = 0;
+const ItemTestMemo = memo(ItemTest);
+function ItemTest() {
+  const { methods } = useItemsStore();
+  const handleLoadClick = useMemo(() => loadItem(methods), []);
+
+  return (
+    <div>
+      <p>
+        This component using only methods and should not be re-rendered ever
+      </p>
+      <p>{`Rerender counter: ${itemTestRerenderCounter++}`}</p>
+      <button onClick={handleLoadClick}>Load item from memo component</button>
     </div>
   );
 }

@@ -34,11 +34,12 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
     const logger = tryCreateDevToolsLogger();
 
     return (state: S, action: Action<any>) => {
+      const nextState = methods[action.type](state)(...action.payload);
       if (logger) {
-        logger(action, state);
+        logger(action, nextState);
       }
 
-      return methods[action.type](state)(...action.payload);
+      return nextState;
     };
   }, []);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -66,6 +67,6 @@ export const createUseStore = <S extends any, M extends MethodsIn<S>>(
   defaultState: S,
   methodsIn: M
 ) =>
-  createUseContext((initialState: S | undefined) =>
+  createUseContext(({ initialState }: { initialState: S }) =>
     useMethods(initialState || defaultState, methodsIn)
   );

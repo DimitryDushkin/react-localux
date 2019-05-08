@@ -16,10 +16,8 @@ export const defaultState: State = {
   loading: false
 };
 const methods = {
-  loading: (state: State) => () => ({
-    ...state,
-    loading: true,
-    error: false
+  loading: () => () => ({
+    loading: true
   }),
   loadSuccess: (state: State) => (data: string) => ({
     ...state,
