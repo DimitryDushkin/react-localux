@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import { create, act } from "react-test-renderer";
 import { createUseStore } from "../src/create-store";
 
@@ -24,7 +24,7 @@ describe("React Localux", () => {
   it("renders correctly initial state", () => {
     const useStore = createUseTestStore();
 
-    function Root() {
+    function App() {
       return (
         <useStore.Provider initialState={defaultState}>
           <Item />
@@ -37,16 +37,17 @@ describe("React Localux", () => {
       return <div>{JSON.stringify(state)}</div>;
     }
 
-    const app = create(<Root />);
+    const app = create(<App />);
     expect(app.root.findByType(Item).findByType("div").children).toEqual([
       JSON.stringify(defaultState)
     ]);
   });
 
-  it("renders correctly on method call", () => {
+  it("renders correctly after method call", () => {
     const useStore = createUseTestStore();
+    const testData = "test data";
 
-    function Root() {
+    function App() {
       return (
         <useStore.Provider initialState={defaultState}>
           <State />
@@ -62,16 +63,16 @@ describe("React Localux", () => {
 
     function ItemWithMethodCall() {
       const { methods } = useStore();
-      return <button onClick={() => methods.setData("test data")}>Op</button>;
+      return <button onClick={() => methods.setData(testData)}>Op</button>;
     }
 
-    const app = create(<Root />);
+    const app = create(<App />);
     act(() => {
       app.root.findByType("button").props.onClick();
     });
 
     expect(app.root.findByType(State).children).toEqual([
-      JSON.stringify({ isLoading: false, data: "test data" })
+      JSON.stringify({ isLoading: false, data: testData })
     ]);
   });
 });

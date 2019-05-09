@@ -1,7 +1,5 @@
 // item-store.ts
 import { createUseStore, Thunk } from "../src/create-store";
-import { useState, useMemo } from "react";
-import createUseContext from "constate";
 
 const pause = async (timeout: number): Promise<any> =>
   new Promise(resolve => setTimeout(resolve, timeout));
