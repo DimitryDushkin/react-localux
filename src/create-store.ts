@@ -70,5 +70,7 @@ export const createUseStore = <S extends any, M extends MethodsIn<S>>(
   createUseContext(
     ({ initialState }: { initialState: S }) =>
       useMethods(initialState || defaultState, methodsIn),
+    // https://kentcdodds.com/blog/always-use-memo-your-context-value
+    // Pass to context not a new object every time
     ({ state }) => [state]
   );

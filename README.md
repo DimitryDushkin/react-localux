@@ -13,7 +13,8 @@ _React 16.8+ only, because it uses hooks (useReducer mainly)_. For React < 16.8 
 - Compact creation of store: just declare state and methods (simple combination on reducers and actions)
 - Async actions support
 - Redux dev tools logging support
-- Simple API based on hooks
+- TypeScript first! Typings for all methods-actions for free.
+- API based on hooks
 
 ## Example code (from [example.tsx](example/example.tsx))
 
@@ -138,4 +139,5 @@ That's why this library has been born. 👭
 ## Credits
 
 Thanks to [@viventus](https://github.com/viventus) for helpfull discussions.
+
 Thanks to [Constate library](https://github.com/diegohaz/constate) for simple solution for placing hooks inside context.
