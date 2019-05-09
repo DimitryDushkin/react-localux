@@ -67,6 +67,8 @@ export const createUseStore = <S extends any, M extends MethodsIn<S>>(
   defaultState: S,
   methodsIn: M
 ) =>
-  createUseContext(({ initialState }: { initialState: S }) =>
-    useMethods(initialState || defaultState, methodsIn)
+  createUseContext(
+    ({ initialState }: { initialState: S }) =>
+      useMethods(initialState || defaultState, methodsIn),
+    ({ state }) => [state]
   );

@@ -8,7 +8,9 @@ function ItemScreen() {
     <Provider initialState={defaultState}>
       <Item />
       <hr />
-      <ItemTestMemo />
+      <MethodsConsumerNoRerendering />
+      <hr />
+      <StateSlice />
     </Provider>
   );
 }
@@ -28,20 +30,42 @@ function Item() {
   );
 }
 
-let itemTestRerenderCounter = 0;
-const ItemTestMemo = memo(ItemTest);
-function ItemTest() {
+let methodsConsumerRerenderingCounter = 0;
+function MethodsConsumerNoRerendering() {
   const { methods } = useItemsStore();
   const handleLoadClick = useMemo(() => loadItem(methods), []);
 
-  return (
-    <div>
-      <p>
-        This component using only methods and should not be re-rendered ever
-      </p>
-      <p>{`Rerender counter: ${itemTestRerenderCounter++}`}</p>
-      <button onClick={handleLoadClick}>Load item from memo component</button>
-    </div>
+  return useMemo(
+    () => (
+      <div>
+        <p>
+          This component using only methods and should not be re-rendered ever
+        </p>
+        <p>{`Rerender counter: ${methodsConsumerRerenderingCounter++}`}</p>
+        <button onClick={handleLoadClick}>Load item from memo component</button>
+      </div>
+    ),
+    []
+  );
+}
+
+let stateSliceRerenderingCounter = 0;
+function StateSlice() {
+  const {
+    state: { error },
+    methods
+  } = useItemsStore();
+  return useMemo(
+    () => (
+      <div>
+        <p>This component rerenders only on error occurance</p>
+        <p>{`Rerender counter: ${stateSliceRerenderingCounter++}`}</p>
+        <button onClick={loadItem(methods)}>
+          Load item from memo component
+        </button>
+      </div>
+    ),
+    [error]
   );
 }
 
