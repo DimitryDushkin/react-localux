@@ -80,7 +80,7 @@ function ItemScreen() {
 
 function Item() {
   const { state, methods } = useItemsStore();
-  const handleLoadClick = useMemo(() => loadItem(methods), []);
+  const handleLoadClick = useCallback(loadItem(methods), []);
 
   return (
     <div>

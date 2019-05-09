@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from "react";
+import React, { useMemo, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { useItemsStore, defaultState, loadItem } from "./store";
 
@@ -17,7 +17,7 @@ function ItemScreen() {
 
 function Item() {
   const { state, methods } = useItemsStore();
-  const handleLoadClick = useMemo(() => loadItem(methods), []);
+  const handleLoadClick = useCallback(loadItem(methods), []);
 
   return (
     <div>
@@ -33,7 +33,7 @@ function Item() {
 let methodsConsumerRerenderingCounter = 0;
 function MethodsConsumerNoRerendering() {
   const { methods } = useItemsStore();
-  const handleLoadClick = useMemo(() => loadItem(methods), []);
+  const handleLoadClick = useCallback(loadItem(methods), []);
 
   return useMemo(
     () => (
