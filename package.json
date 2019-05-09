@@ -14,7 +14,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "tsc",
     "build:example": "parcel build example/example.tsx -d example/dist",
     "dev": "parcel example/index.dev.html",
@@ -35,12 +35,20 @@
   },
   "homepage": "https://github.com/DimitryDushkin/react-localux#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.12",
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.8.4",
+    "@types/react-test-renderer": "^16.8.1",
+    "babel-jest": "^24.8.0",
     "constate": "^1.1.1",
+    "jest": "^24.8.0",
     "parcel-bundler": "^1.12.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-test-renderer": "^16.8.6",
     "typescript": "^3.4.5"
   },
   "peerDependencies": {

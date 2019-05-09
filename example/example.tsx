@@ -58,7 +58,9 @@ function StateSlice() {
   return useMemo(
     () => (
       <div>
-        <p>This component rerenders only on error occurance</p>
+        <p>
+          This component rerenders only on state.error changes (error on load)
+        </p>
         <p>{`Rerender counter: ${stateSliceRerenderingCounter++}`}</p>
         <button onClick={loadItem(methods)}>
           Load item from memo component
