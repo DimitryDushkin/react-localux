@@ -2,17 +2,12 @@ import { useReducer, useMemo } from "react";
 import createUseContext from "constate";
 import { tryCreateDevToolsLogger } from "./devtools";
 
-type MethodArgs<S, F extends MethodIn<S>> = F extends (
-  state: S
-) => (...args: infer Args) => any
+type MethodIn<S> = (state: S) => (...args: any[]) => S;
+type MethodsIn<S = any> = Record<string, MethodIn<S>>;
+type MethodOutArgs<S, F> = F extends (state: S) => (...args: infer Args) => S
   ? Args
   : never;
-
-type MethodIn<S> = (state: S) => (...args: any[]) => S;
-type MethodsIn<S> = Record<string, MethodIn<S>>;
-type MethodOut<S, F> = F extends (state: S) => (...args: infer Args) => S
-  ? (...args: Args) => void
-  : never;
+type MethodOut<S, F> = (...args: MethodOutArgs<S, F>) => void;
 type MethodsOut<S, M extends MethodsIn<S>> = {
   [K in keyof M]: MethodOut<S, M[K]>
 };
@@ -20,20 +15,18 @@ export type Thunk<M extends MethodsIn<any>> = (
   methods: MethodsOut<any, M>
 ) => (...args: any[]) => any;
 
-type Action<P> = {
-  type: string;
-  payload: P;
-};
+export type ActionsUnion<S, M extends MethodsIn> = {
+  [K in keyof M]: { type: K; payload: MethodOutArgs<S, M[K]> }
+}[keyof M];
 
 export function useMethods<S extends any, M extends MethodsIn<S>>(
   initialState: S,
   methods: M
 ) {
-  // 1. Create actions and action creators from map of actions
   const reducer = useMemo(() => {
     const logger = tryCreateDevToolsLogger();
 
-    return (state: S, action: Action<any>) => {
+    return (state: S, action: ActionsUnion<S, M>) => {
       const nextState = methods[action.type](state)(...action.payload);
       if (logger) {
         logger(action, nextState);
@@ -47,18 +40,12 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
     const methodsOut = {} as MethodsOut<S, M>;
 
     Object.keys(methods).forEach(type => {
-      const originalMethodIn = methods[type];
-      const methodOut: MethodOut<S, typeof originalMethodIn> = (
-        ...payload: MethodArgs<S, typeof originalMethodIn>
-      ) => {
+      methodsOut[type] = (...payload) => {
         dispatch({
-          type: type,
+          type,
           payload
-        });
+        } as ActionsUnion<S, M>);
       };
-
-      // @ts-ignore
-      methodsOut[type] = methodOut;
     });
 
     return methodsOut;

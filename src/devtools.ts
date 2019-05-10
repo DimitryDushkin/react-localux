@@ -24,7 +24,7 @@ export function tryCreateDevToolsLogger<S>() {
     features: {}
   });
 
-  return (action: { type: string; payload: any }, state: S) => {
+  return (action: { type: any; payload: any }, state: S) => {
     devTools.send(action, state, {}, instanceID);
   };
 }

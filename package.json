@@ -19,6 +19,11 @@
     "dev": "parcel example/index.dev.html",
     "prepublishOnly": "echo \"BUILD\"; npm run build"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DimitryDushkin/react-localux.git"
@@ -43,6 +48,7 @@
     "@types/react-test-renderer": "^16.8.1",
     "babel-jest": "^24.8.0",
     "constate": "^1.1.1",
+    "husky": "^2.2.0",
     "jest": "^24.8.0",
     "parcel-bundler": "^1.12.3",
     "react": "^16.8.6",
