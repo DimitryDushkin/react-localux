@@ -43,22 +43,26 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
     };
   }, []);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const methodsOut = {} as MethodsOut<S, M>;
+  const methodsOut = useMemo(() => {
+    const methodsOut = {} as MethodsOut<S, M>;
 
-  Object.keys(methods).forEach(type => {
-    const originalMethodIn = methods[type];
-    const methodOut: MethodOut<S, typeof originalMethodIn> = (
-      ...payload: MethodArgs<S, typeof originalMethodIn>
-    ) => {
-      dispatch({
-        type: type,
-        payload
-      });
-    };
+    Object.keys(methods).forEach(type => {
+      const originalMethodIn = methods[type];
+      const methodOut: MethodOut<S, typeof originalMethodIn> = (
+        ...payload: MethodArgs<S, typeof originalMethodIn>
+      ) => {
+        dispatch({
+          type: type,
+          payload
+        });
+      };
 
-    // @ts-ignore check it later
-    methodsOut[type] = methodOut;
-  });
+      // @ts-ignore
+      methodsOut[type] = methodOut;
+    });
+
+    return methodsOut;
+  }, []);
 
   return { state, methods: methodsOut };
 }
