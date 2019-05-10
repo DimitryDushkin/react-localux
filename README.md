@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/react-localux.svg)](https://www.npmjs.com/package/react-localux)
 
-React Localux (RL) is comfortable solution for separation store-related logic from react components. Unlike Redux **main goal for RL is being home for compact local stores of smart components**.
+React Localux (RL) is comfortable solution for separation store-related logic from react components. Unlike Redux **main goal for RL is being home for compact local stores of smart components**. Based on `useReducer` and new Context API.
 
 For example, you might have screen-like component of some item with vast logic related to this screen and it is required to support several different stacked screens of such items. Implementing such feature with _global Redux store result complicated code_, but it turns out that using _single local store for each screen produces quite straightforward solution_.
 
@@ -15,6 +15,7 @@ _React 16.8+ only, because it uses hooks (useReducer mainly)_. For React < 16.8 
 - Redux dev tools logging support
 - TypeScript first! Typings for all methods-actions for free.
 - API based on hooks
+- Lightweight: 2.5 Kb non-gzipped and uglified = 1.5 Kb + constate 1 Kb
 
 ## Example code (from [example.tsx](example/example.tsx))
 
@@ -122,17 +123,16 @@ Also see [tests](__tests__/create-store.spec.tsx).
 - No async actions support
 - Not very performant code on store creation
 
-[Alveron](https://github.com/rofrischmann/alveron):
+[Alveron](https://github.com/rofrischmann/alveron) is really good lib with good documentation:
 
-- No TypeScript support
+- No TypeScript support and due to API design decision for actions it is not possible to make types
+- No redux dev tools logging
 
 [Use methods](https://github.com/pelotom/use-methods)
 
-- Strange performance solutions
 - No async actions support built-in
-- No Redux logging
-- Heavy dependency on immer
-- Immer
+- No redux dev tools logging
+- API based on ambiguous immer (immer adds 4.3 Kb gzip)
 
 That's why this library has been born. 👭
 
