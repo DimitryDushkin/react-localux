@@ -1,6 +1,7 @@
-import { useReducer, useMemo } from "react";
-import createUseContext from "constate";
-import { tryCreateDevToolsLogger } from "./devtools";
+import createUseContext from 'constate';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
+
+import { tryCreateDevToolsLogger } from './devtools';
 
 type MethodIn<S> = (state: S) => (...args: any[]) => S;
 type MethodsIn<S = any> = Record<string, MethodIn<S>>;
@@ -23,6 +24,15 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
   initialState: S,
   methods: M
 ) {
+  // To avoid warnings "Can't perform a React state update on an unmounted component"
+  const isMounted = useRef(true);
+  useEffect(
+    () => () => {
+      isMounted.current = false;
+    },
+    []
+  );
+
   const reducer = useMemo(() => {
     const logger = tryCreateDevToolsLogger();
 
@@ -35,12 +45,17 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
       return nextState;
     };
   }, []);
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const methodsOut = useMemo(() => {
     const methodsOut = {} as MethodsOut<S, M>;
 
     Object.keys(methods).forEach(type => {
       methodsOut[type] = (...payload) => {
+        if (!isMounted.current) {
+          return;
+        }
+
         dispatch({
           type,
           payload

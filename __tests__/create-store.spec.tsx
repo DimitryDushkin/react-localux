@@ -1,12 +1,12 @@
-import React from "react";
-import { create, act } from "react-test-renderer";
-import { createUseStore } from "../src/create-store";
+import React, { useState } from 'react';
+import { act, create } from 'react-test-renderer';
+
+import { createUseStore, Thunk } from '../src/create-store';
 
 type State = {
   data?: string;
   isLoading?: boolean;
 };
-
 const defaultState: State = {
   isLoading: true
 };
@@ -16,6 +16,12 @@ const methods = {
     isLoading: false,
     data
   })
+};
+
+const longThunk: Thunk<typeof methods> = methods => () => {
+  setTimeout(() => {
+    methods.setData("some data");
+  }, 0);
 };
 
 const createUseTestStore = () => createUseStore(defaultState, methods);
@@ -74,5 +80,45 @@ describe("React Localux", () => {
     expect(app.root.findByType(State).children).toEqual([
       JSON.stringify({ isLoading: false, data: testData })
     ]);
+  });
+
+  it("not throw errors on method call of unmounted context", () => {
+    const useStore = createUseTestStore();
+
+    function App() {
+      const [visible, setVisibility] = useState(true);
+
+      return (
+        <>
+          <button onClick={() => setVisibility(false)}>some button</button>
+          {visible && (
+            <useStore.Provider initialState={defaultState}>
+              <ItemWithThunk />
+            </useStore.Provider>
+          )}
+        </>
+      );
+    }
+
+    function ItemWithThunk() {
+      const { methods } = useStore();
+
+      return <button onClick={longThunk(methods)}>some button</button>;
+    }
+
+    const app = create(<App />);
+
+    act(() => {
+      app.root
+        .findByType(ItemWithThunk)
+        .findByType("button")
+        .props.onClick();
+
+      const switchButton = app.root.children[0];
+      typeof switchButton !== "string" && switchButton.props.onClick();
+    });
+
+    // find throws error if not found
+    expect(() => app.root.findByType(ItemWithThunk)).toThrowError();
   });
 });

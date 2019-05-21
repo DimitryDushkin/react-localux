@@ -132,7 +132,7 @@ Also see [tests](__tests__/create-store.spec.tsx).
 
 - No async actions support built-in
 - No redux dev tools logging
-- API based on ambiguous immer (immer adds 4.3 Kb gzip)
+- API based on ambiguous immer (immer adds 4.3 Kb gzip). Immer adds performance penality on every action call, up to 15x on browsers without Proxy and 2x-3x on others.
 
 That's why this library has been born. 👭
 
