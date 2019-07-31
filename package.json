@@ -1,6 +1,6 @@
 {
   "name": "react-localux",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "React Context API based store",
   "files": [
     "src/create-store.js",
