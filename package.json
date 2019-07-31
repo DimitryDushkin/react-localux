@@ -39,26 +39,26 @@
   },
   "homepage": "https://github.com/DimitryDushkin/react-localux#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.12",
-    "@types/react": "^16.8.16",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-test-renderer": "^16.8.1",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.5",
+    "@types/react-test-renderer": "^16.8.3",
     "babel-jest": "^24.8.0",
-    "constate": "^1.1.1",
-    "husky": "^2.2.0",
+    "constate": "^1.2.0",
+    "husky": "^3.0.2",
     "jest": "^24.8.0",
     "parcel-bundler": "^1.12.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "^16.8.6",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "react": "^16.8.6",
-    "constate": "^1.1.1"
+    "constate": "^1.2.0"
   },
   "browserslist": [
     "last 2 Chrome versions"
