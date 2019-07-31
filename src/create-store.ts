@@ -20,6 +20,8 @@ export type ActionsUnion<S, M extends MethodsIn> = {
   [K in keyof M]: { type: K; payload: MethodOutArgs<S, M[K]> }
 }[keyof M];
 
+export const keysOf = <T extends Record<string, any>>(obj: T) => Object.keys(obj) as (keyof T)[];
+
 export function useMethods<S extends any, M extends MethodsIn<S>>(
   initialState: S,
   methods: M
@@ -50,7 +52,7 @@ export function useMethods<S extends any, M extends MethodsIn<S>>(
   const methodsOut = useMemo(() => {
     const methodsOut = {} as MethodsOut<S, M>;
 
-    Object.keys(methods).forEach(type => {
+    keysOf(methods).forEach(type => {
       methodsOut[type] = (...payload) => {
         if (!isMounted.current) {
           return;
