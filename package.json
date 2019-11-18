@@ -4,7 +4,7 @@
   "description": "React Context API based store",
   "files": [
     "src/create-store.js",
-    "src/create-store.ts",
+    "src/create-store.tsx",
     "src/devtools.js",
     "src/devtools.ts",
     "index.js",
