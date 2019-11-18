@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useCallback, useMemo } from "react";
+import ReactDOM from "react-dom";
 
-import { defaultState, loadItem, useItemsStore } from './store';
+import { defaultState, loadItem, useItemsStore } from "./store";
 
 function ItemScreen() {
   const { Provider } = useItemsStore;
@@ -46,7 +46,7 @@ function MethodsConsumerNoRerendering() {
         <button onClick={handleLoadClick}>Load item from memo component</button>
       </div>
     ),
-    []
+    [handleLoadClick]
   );
 }
 

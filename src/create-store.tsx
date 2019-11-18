@@ -26,7 +26,7 @@ export type ActionsUnion<S, M extends MethodsIn> = {
   [K in keyof M]: { type: K; payload: MethodOutArgs<S, M[K]> };
 }[keyof M];
 
-export const keysOf = <T extends Record<string, any>>(obj: T) =>
+const keysOf = <T extends Record<string, any>>(obj: T) =>
   Object.keys(obj) as (keyof T)[];
 
 export function useMethods<S extends any, M extends MethodsIn<S>>(

@@ -15,7 +15,7 @@ _React 16.8+ only, because it uses hooks (useReducer mainly)_. For React < 16.8 
 - Redux dev tools logging support
 - TypeScript first! Typings for all methods-actions for free.
 - API based on hooks
-- Lightweight: 3 Kb non-gzipped and uglified
+- Lightweight: 1.8 Kb non-gzipped and uglified
 
 ## Example code (from [example.tsx](example/example.tsx))
 
