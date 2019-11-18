@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { act, create } from 'react-test-renderer';
+import React, { useState } from "react";
+import { act, create } from "react-test-renderer";
 
-import { createUseStore, Thunk } from '../src/create-store';
+import { createUseStore, Thunk, NoProviderError } from "../src/create-store";
 
 type State = {
   data?: string;
@@ -15,6 +15,10 @@ const methods = {
   setData: (_: State) => (data: string) => ({
     isLoading: false,
     data
+  }),
+  setAnyData: (_: State) => () => ({
+    isLoading: false,
+    data: "any"
   })
 };
 
@@ -27,6 +31,37 @@ const longThunk: Thunk<typeof methods> = methods => () => {
 const createUseTestStore = () => createUseStore(defaultState, methods);
 
 describe("React Localux", () => {
+  it("takes defaultState correctly if no high level Provider is present", () => {
+    const useStore = createUseTestStore();
+
+    function App() {
+      const { state } = useStore();
+      return <div>{JSON.stringify(state)}</div>;
+    }
+
+    const app = create(<App />);
+    expect(app.root.findByType("div").children).toEqual([
+      JSON.stringify(defaultState)
+    ]);
+  });
+
+  it("throws error if methods have been called without high level Provider is present", () => {
+    const useStore = createUseTestStore();
+
+    function App() {
+      const { methods } = useStore();
+      return <button onClick={methods.setAnyData}>click</button>;
+    }
+
+    const app = create(<App />);
+
+    act(() => {
+      expect(() => app.root.findByType("button").props.onClick()).toThrowError(
+        NoProviderError
+      );
+    });
+  });
+
   it("renders correctly initial state", () => {
     const useStore = createUseTestStore();
 
@@ -44,6 +79,7 @@ describe("React Localux", () => {
     }
 
     const app = create(<App />);
+
     expect(app.root.findByType(Item).findByType("div").children).toEqual([
       JSON.stringify(defaultState)
     ]);

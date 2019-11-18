@@ -39,26 +39,24 @@
   },
   "homepage": "https://github.com/DimitryDushkin/react-localux#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.16",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.5",
-    "@types/react-test-renderer": "^16.8.3",
-    "babel-jest": "^24.8.0",
-    "constate": "^1.2.0",
-    "husky": "^3.0.2",
-    "jest": "^24.8.0",
-    "parcel-bundler": "^1.12.3",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.6",
-    "typescript": "^3.5.3"
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
+    "@babel/preset-typescript": "^7.7.2",
+    "@types/jest": "^24.0.23",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-test-renderer": "^16.9.1",
+    "babel-jest": "^24.9.0",
+    "husky": "^3.0.9",
+    "jest": "^24.9.0",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-test-renderer": "^16.12.0",
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "react": "^16.8.6",
-    "constate": "^1.2.0"
+    "react": "^16.12.0"
   },
   "browserslist": [
     "last 2 Chrome versions"
