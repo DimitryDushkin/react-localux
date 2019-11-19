@@ -134,6 +134,10 @@ Also see [tests](__tests__/create-store.spec.tsx).
 - No redux dev tools logging
 - API based on ambiguous immer (immer adds 4.3 Kb gzip). Immer adds performance penality on every action call, up to 15x on browsers without Proxy and 2x-3x on others.
 
+[Constate](https://github.com/diegohaz/constate)
+
+— [No default state support](https://github.com/diegohaz/constate/pull/40), which is usefull for unit-testing.
+
 That's why this library has been born. 👭
 
 ## Credits
