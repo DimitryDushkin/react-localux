@@ -125,7 +125,7 @@ Also see [tests](__tests__/create-store.spec.tsx).
 
 [Alveron](https://github.com/rofrischmann/alveron) is really good lib with good documentation:
 
-- No TypeScript support and due to API design decision for actions it is not possible to make types
+- No TypeScript support and due to API design decision for actions it is not possible to make types (looks like it is possible now with TS 3.7)
 - No redux dev tools logging
 
 [Use methods](https://github.com/pelotom/use-methods)
