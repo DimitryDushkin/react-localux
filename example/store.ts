@@ -28,6 +28,20 @@ const methods = {
     error: true
   })
 };
+type Methods = typeof methods;
+const thunks = {
+  loadItem: (state: State, methods: Methods) => async () => {
+    methods.loading();
+    // Pretend making API call which can fail
+    await pause(1000);
+    if (Math.random() > 0.5) {
+      methods.loadSuccess("Hooray!😁");
+    } else {
+      methods.loadFailed();
+    }
+  }
+};
+
 type MyThunk = Thunk<typeof methods>;
 
 export const loadItem: MyThunk = methods => async () => {

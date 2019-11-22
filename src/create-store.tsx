@@ -18,6 +18,7 @@ type MethodOut<S, F> = (...args: MethodOutArgs<S, F>) => void;
 type MethodsOut<S, M extends MethodsIn<S>> = {
   [K in keyof M]: MethodOut<S, M[K]>;
 };
+
 export type Thunk<M extends MethodsIn<any>> = (
   methods: MethodsOut<any, M>
 ) => (...args: any[]) => any;
