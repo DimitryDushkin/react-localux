@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { act, create } from "react-test-renderer";
-
-import { createUseStore, Thunk, NoProviderError } from "../src/create-store";
+import { NoProviderError } from "../src/utils";
+import { createUseStore } from "../src/create-use-store";
 
 type State = {
   data?: string;
@@ -11,24 +11,27 @@ const defaultState: State = {
   isLoading: true
 };
 
-const methods = {
-  setData: (_: State) => (data: string) => ({
-    isLoading: false,
-    data
-  }),
-  setAnyData: (_: State) => () => ({
-    isLoading: false,
-    data: "any"
-  })
-};
-
-const longThunk: Thunk<typeof methods> = methods => () => {
-  setTimeout(() => {
-    methods.setData("some data");
-  }, 0);
-};
-
-const createUseTestStore = () => createUseStore(defaultState, methods);
+const createUseTestStore = () =>
+  createUseStore(
+    defaultState,
+    {
+      setData: (_: State) => (data: string) => ({
+        isLoading: false,
+        data
+      }),
+      setAnyData: (_: State) => () => ({
+        isLoading: false,
+        data: "any"
+      })
+    },
+    {
+      longEffect: (_, methods) => () => {
+        setTimeout(() => {
+          methods.setData("some data");
+        }, 0);
+      }
+    }
+  );
 
 describe("React Localux", () => {
   it("takes defaultState correctly if no high level Provider is present", () => {
@@ -137,9 +140,9 @@ describe("React Localux", () => {
     }
 
     function ItemWithThunk() {
-      const { methods } = useStore();
+      const { effects } = useStore();
 
-      return <button onClick={longThunk(methods)}>some button</button>;
+      return <button onClick={effects.longEffect}>some button</button>;
     }
 
     const app = create(<App />);
