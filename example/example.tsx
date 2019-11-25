@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import ReactDOM from "react-dom";
 
-import { defaultState, loadItem, useItemsStore } from "./store";
+import { defaultState, useItemsStore } from "./example-store";
 
 function ItemScreen() {
   const { Provider } = useItemsStore;
@@ -17,8 +17,7 @@ function ItemScreen() {
 }
 
 function Item() {
-  const { state, methods } = useItemsStore();
-  const handleLoadClick = useCallback(loadItem(methods), []);
+  const { state, effects } = useItemsStore();
 
   return (
     <div>
@@ -26,15 +25,14 @@ function Item() {
       {state.loading && <p>Loading...</p>}
       {state.error && <p>Error loading 😕</p>}
       {state.data && <p>Data loaded 🎆: {state.data}</p>}
-      <button onClick={handleLoadClick}>Load item</button>
+      <button onClick={effects.loadItem}>Load item</button>
     </div>
   );
 }
 
 let methodsConsumerRerenderingCounter = 0;
 function MethodsConsumerNoRerendering() {
-  const { methods } = useItemsStore();
-  const handleLoadClick = useCallback(loadItem(methods), []);
+  const { effects } = useItemsStore();
 
   return useMemo(
     () => (
@@ -43,10 +41,12 @@ function MethodsConsumerNoRerendering() {
           This component using only methods and should not be re-rendered ever
         </p>
         <p>{`Rerender counter: ${methodsConsumerRerenderingCounter++}`}</p>
-        <button onClick={handleLoadClick}>Load item from memo component</button>
+        <button onClick={effects.loadItem}>
+          Load item from memo component
+        </button>
       </div>
     ),
-    [handleLoadClick]
+    []
   );
 }
 
@@ -54,7 +54,7 @@ let stateSliceRerenderingCounter = 0;
 function StateSlice() {
   const {
     state: { error },
-    methods
+    effects
   } = useItemsStore();
   return useMemo(
     () => (
@@ -63,7 +63,7 @@ function StateSlice() {
           This component rerenders only on state.error changes (error on load)
         </p>
         <p>{`Rerender counter: ${stateSliceRerenderingCounter++}`}</p>
-        <button onClick={loadItem(methods)}>
+        <button onClick={effects.loadItem}>
           Load item from memo component
         </button>
       </div>
