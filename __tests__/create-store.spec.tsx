@@ -11,6 +11,13 @@ const defaultState: State = {
   isLoading: true
 };
 
+const DATA_FROM_EFFECT = "DATA_FROM_EFFECT";
+const wait = (timeout: number): Promise<void> => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+};
+
 const createUseTestStore = () =>
   createUseStore(
     defaultState,
@@ -25,11 +32,11 @@ const createUseTestStore = () =>
       })
     },
     {
-      longEffect: (_, methods) => () => {
-        setTimeout(() => {
-          methods.setData("some data");
-        }, 0);
-      }
+      delayedSetDataEffect: (_, methods) => async () => {
+        await wait(100);
+        methods.setData(DATA_FROM_EFFECT);
+      },
+      getStateUserEffect: getState => async () => {}
     }
   );
 
@@ -142,7 +149,9 @@ describe("React Localux", () => {
     function ItemWithThunk() {
       const { effects } = useStore();
 
-      return <button onClick={effects.longEffect}>some button</button>;
+      return (
+        <button onClick={effects.delayedSetDataEffect}>some button</button>
+      );
     }
 
     const app = create(<App />);
@@ -159,5 +168,44 @@ describe("React Localux", () => {
 
     // find throws error if not found
     expect(() => app.root.findByType(ItemWithThunk)).toThrowError();
+  });
+
+  it("executes async effect with methods correctly", async () => {
+    jest.useFakeTimers();
+
+    const useStore = createUseTestStore();
+
+    function App() {
+      return (
+        <useStore.Provider initialState={defaultState}>
+          <State />
+          <ItemWithMethodCall />
+        </useStore.Provider>
+      );
+    }
+
+    function State() {
+      const { state } = useStore();
+      return <>{JSON.stringify(state)}</>;
+    }
+
+    function ItemWithMethodCall() {
+      const { effects } = useStore();
+      return <button onClick={effects.delayedSetDataEffect}>Op</button>;
+    }
+
+    const app = create(<App />);
+
+    await act(async () => {
+      const promiseWithSetTimeoutInside = app.root
+        .findByType("button")
+        .props.onClick();
+      jest.runOnlyPendingTimers();
+      await promiseWithSetTimeoutInside;
+    });
+
+    expect(app.root.findByType(State).children).toEqual([
+      JSON.stringify({ isLoading: false, data: DATA_FROM_EFFECT })
+    ]);
   });
 });
