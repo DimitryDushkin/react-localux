@@ -43,7 +43,6 @@ export type EffectsIn<MOut extends MethodsOut<MethodsIn<S>>, S = any> = Record<
   EffectIn<MOut, S>
 >;
 
-// Replace any with ExtractEffectInResult
 export type EffectOut<F> = (
   ...args: ExtractEffectInArgs<F>
 ) => ExtractEffectInResult<F>;

@@ -46,7 +46,7 @@ function MethodsConsumerNoRerendering() {
         </button>
       </div>
     ),
-    []
+    [effects]
   );
 }
 
@@ -59,6 +59,7 @@ function StateSlice() {
   return useMemo(
     () => (
       <div>
+        <h5>Check re-renders with state slicing</h5>
         <p>
           This component rerenders only on state.error changes (error on load)
         </p>

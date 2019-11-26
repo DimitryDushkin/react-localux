@@ -58,6 +58,9 @@ export function useLocalux<
         methodsOutAcc[type] = (...payload) => {
           // Do not dispatch actions on unmounted Provider
           if (!isMounted.current) {
+            console.warn(
+              "Method called on unmounted Provider, but it can be ok."
+            );
             return;
           }
 
