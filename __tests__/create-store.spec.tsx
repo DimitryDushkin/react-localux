@@ -36,7 +36,19 @@ const createUseTestStore = () =>
         await wait(100);
         methods.setData(DATA_FROM_EFFECT);
       },
-      getStateUserEffect: getState => async () => {}
+      getStateEffect: getState => () => {
+        return getState();
+      },
+      getBothInitialAndMutatedState: (getState, methods) => async () => {
+        const initial = getState();
+        methods.setData(DATA_FROM_EFFECT);
+        await wait(10);
+        const mutated = getState();
+        return {
+          initial,
+          mutated
+        };
+      }
     }
   );
 
@@ -207,5 +219,93 @@ describe("React Localux", () => {
     expect(app.root.findByType(State).children).toEqual([
       JSON.stringify({ isLoading: false, data: DATA_FROM_EFFECT })
     ]);
+  });
+
+  it("provides correct getState results within effects", async () => {
+    jest.useFakeTimers();
+
+    const useStore = createUseTestStore();
+
+    function App() {
+      return (
+        <useStore.Provider initialState={defaultState}>
+          <State />
+          <ItemWithMethodCall />
+        </useStore.Provider>
+      );
+    }
+
+    function State() {
+      const { state } = useStore();
+      return <>{JSON.stringify(state)}</>;
+    }
+
+    function ItemWithMethodCall() {
+      const { effects, methods } = useStore();
+      return (
+        <>
+          <button onClick={methods.setAnyData}>Call method</button>
+          <button onClick={effects.getStateEffect}>
+            Call effect, returning state
+          </button>
+        </>
+      );
+    }
+
+    const app = create(<App />);
+
+    act(() => {
+      const [callMethodButton] = app.root.findAllByType("button");
+      callMethodButton.props.onClick();
+    });
+
+    act(() => {
+      const [_, callEffectButton] = app.root.findAllByType("button");
+      const resultedState = callEffectButton.props.onClick();
+      expect(resultedState).toEqual({
+        isLoading: false,
+        data: "any"
+      });
+    });
+  });
+
+  it("should return different states in async effect, that changes state", async () => {
+    jest.useRealTimers();
+
+    const useStore = createUseTestStore();
+
+    function App() {
+      return (
+        <useStore.Provider initialState={defaultState}>
+          <State />
+          <ItemWithMethodCall />
+        </useStore.Provider>
+      );
+    }
+
+    function State() {
+      const { state } = useStore();
+      return <>{JSON.stringify(state)}</>;
+    }
+
+    function ItemWithMethodCall() {
+      const { effects } = useStore();
+      return (
+        <button onClick={effects.getBothInitialAndMutatedState}>Op</button>
+      );
+    }
+
+    const app = create(<App />);
+
+    await act(async () => {
+      const { initial, mutated } = await app.root
+        .findByType("button")
+        .props.onClick();
+      expect(initial).toEqual(defaultState);
+      expect(mutated).toEqual({
+        isLoading: false,
+        data: DATA_FROM_EFFECT
+      });
+    });
   });
 });
