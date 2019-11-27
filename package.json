@@ -3,10 +3,14 @@
   "version": "2.3.1",
   "description": "React Context API based store",
   "files": [
-    "src/create-store.js",
-    "src/create-store.tsx",
+    "src/create-use-store.js",
+    "src/create-use-store.tsx",
     "src/devtools.js",
     "src/devtools.ts",
+    "src/types.js",
+    "src/types.ts",
+    "src/utils.js",
+    "src/utils.ts",
     "index.js",
     "index.ts",
     "README.md"
