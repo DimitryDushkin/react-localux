@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import ReactDOM from "react-dom";
 
 import { defaultState, useItemsStore } from "./example-store";

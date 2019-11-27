@@ -10,12 +10,13 @@ _React 16.8+ only, because it uses hooks (useReducer mainly)_. For React < 16.8 
 
 ## Main features
 
-- Compact creation of store: just declare state and methods (simple combination on reducers and actions)
-- Async actions support
+- Compact creation of store: just declare state, methods (combination of reducers and actions) and effects
+- Thunk-like actions support — effects
+- Default state support (handy for unit-testing)
 - Redux dev tools logging support
-- TypeScript first! Typings for all methods-actions for free.
+- TypeScript first! Typings for all methods and effects for free.
 - API based on hooks
-- Lightweight: 1.8 Kb non-gzipped and uglified
+- Lightweight: ~2.2 Kb non-gzipped and uglified
 
 ## Example code (from [example.tsx](example/example.tsx))
 
@@ -24,9 +25,10 @@ npm i react-localux constate
 ```
 
 ```tsx
-// item-store.ts
-import { createUseStore, Thunk } from "react-localux";
+// example-store.ts
+import { createUseStore } from "react-localux";
 
+// example-store.ts
 const pause = async (timeout: number): Promise<any> =>
   new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -39,37 +41,39 @@ type State = {
 export const defaultState: State = {
   loading: false
 };
-const methods = {
-  loading: () => () => ({
-    loading: true
-  }),
-  loadSuccess: (state: State) => (data: string) => ({
-    ...state,
-    loading: false,
-    data
-  }),
-  loadFailed: (state: State) => () => ({
-    ...state,
-    loading: false,
-    error: true
-  })
-};
-type MyThunk = Thunk<typeof methods>;
 
-export const loadItem: MyThunk = methods => async () => {
-  methods.loading();
-  // Pretend making API call which can fail
-  await pause(1000);
-  if (Math.random() > 0.5) {
-    methods.loadSuccess("Hooray!😁");
-  } else {
-    methods.loadFailed();
+export const useItemsStore = createUseStore(
+  defaultState,
+  {
+    loading: () => () => ({
+      loading: true
+    }),
+    loadSuccess: (state: State) => (data: string) => ({
+      ...state,
+      loading: false,
+      data
+    }),
+    loadFailed: (state: State) => () => ({
+      ...state,
+      loading: false,
+      error: true
+    })
+  },
+  {
+    loadItem: (_, methods) => async () => {
+      methods.loading();
+      // Pretend making API call which can fail
+      await pause(1000);
+      if (Math.random() > 0.5) {
+        methods.loadSuccess("Hooray!😁");
+      } else {
+        methods.loadFailed();
+      }
+    }
   }
-};
+);
 
-export const useItemsStore = createUseStore(defaultState, methods);
-
-// components.tsx
+// example.tsx
 function ItemScreen() {
   const { Provider } = useItemsStore;
   return (
@@ -80,16 +84,15 @@ function ItemScreen() {
 }
 
 function Item() {
-  const { state, methods } = useItemsStore();
-  const handleLoadClick = useCallback(loadItem(methods), []);
+  const { state, effects } = useItemsStore();
 
   return (
     <div>
-      <h1>Item</h1>
+      <h1>Item Screen</h1>
       {state.loading && <p>Loading...</p>}
       {state.error && <p>Error loading 😕</p>}
       {state.data && <p>Data loaded 🎆: {state.data}</p>}
-      <button onClick={handleLoadClick}>Load item</button>
+      <button onClick={effects.loadItem}>Load item</button>
     </div>
   );
 }
@@ -99,7 +102,7 @@ function Item() {
  * on other state parts change, you can do such optimization with useMemo
  **/
 function ItemOptimized() {
-    const { state, methods } = useItemsStore();
+    const { state } = useItemsStore();
     return useMemo(() => (
         <div>
           <h1>Item</h1>
@@ -136,6 +139,7 @@ Also see [tests](__tests__/create-store.spec.tsx).
 
 [Constate](https://github.com/diegohaz/constate)
 
+— It is more "put any hook inside context" then complete store solution.
 — [No default state support](https://github.com/diegohaz/constate/pull/40), which is usefull for unit-testing.
 
 That's why this library has been born. 👭

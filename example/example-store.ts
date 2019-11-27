@@ -1,7 +1,6 @@
 import { createUseStore } from "../src/create-use-store";
 
-// item-store.ts
-
+// example-store.ts
 const pause = async (timeout: number): Promise<any> =>
   new Promise(resolve => setTimeout(resolve, timeout));
 

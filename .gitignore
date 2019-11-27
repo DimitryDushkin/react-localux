@@ -4,3 +4,4 @@ dist
 index.js
 example/example.js
 .cache
+coverage

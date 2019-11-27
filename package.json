@@ -17,7 +17,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "tsc",
     "build:example": "parcel build example/example.tsx -d example/dist",
     "dev": "parcel example/index.dev.html",
