@@ -48,12 +48,12 @@ export const useItemsStore = createUseStore(
     loading: () => () => ({
       loading: true
     }),
-    loadSuccess: (state: State) => (data: string) => ({
+    loadSuccess: state => (data: string) => ({
       ...state,
       loading: false,
       data
     }),
-    loadFailed: (state: State) => () => ({
+    loadFailed: state => () => ({
       ...state,
       loading: false,
       error: true
