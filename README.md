@@ -139,8 +139,8 @@ Also see [tests](__tests__/create-store.spec.tsx).
 
 [Constate](https://github.com/diegohaz/constate)
 
-— It is more "put any hook inside context" then complete store solution.
-— [No default state support](https://github.com/diegohaz/constate/pull/40), which is usefull for unit-testing.
+- It is more "put any hook inside context" then complete store solution.
+- [No default state support](https://github.com/diegohaz/constate/pull/40), which is usefull for unit-testing.
 
 That's why this library has been born. 👭
 
