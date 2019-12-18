@@ -28,7 +28,6 @@ npm i react-localux constate
 // example-store.ts
 import { createUseStore } from "react-localux";
 
-// example-store.ts
 const pause = async (timeout: number): Promise<any> =>
   new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -73,7 +72,7 @@ export const useItemsStore = createUseStore(
   }
 );
 
-// example.tsx
+// exampleComponent.tsx
 function ItemScreen() {
   const { Provider } = useItemsStore;
   return (
